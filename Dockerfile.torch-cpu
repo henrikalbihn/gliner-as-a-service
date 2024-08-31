@@ -1,0 +1,40 @@
+# using the base bitnami/pytorch:latest image
+#  https://github.com/bitnami/containers/blob/main/bitnami/pytorch/2/debian-12/Dockerfile
+FROM bitnami/pytorch:latest
+
+ENV DEBIAN_FRONTEND noninteractive
+ENV POETRY_HOME="/opt/poetry"
+ENV POETRY_VIRTUALENVS_CREATE=false
+ENV PATH="$POETRY_HOME/bin:$PATH"
+ENV PIP_EXTRA_INDEX_URL='https://download.pytorch.org/whl/cpu'
+
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+# Install base python tools
+RUN pip3 install --upgrade \
+  pip \
+  setuptools \
+  wheel \
+  poetry
+
+# Install Base PyTorch System - Assume CPU
+RUN pip3 install \
+  torch \
+  torchvision \
+  torchaudio \
+  torchdatasets \
+  torchtext \
+  datasets \
+  transformers
+
+RUN pip freeze > /tmp/requirements-pytorch-cpu.txt
+
+RUN cat /tmp/requirements-pytorch-cpu.txt
+
+CMD ["python3", "--version"]
+
+# $ docker build . -f Dockerfile.torch-cpu --pull -t torch-cpu:latest
+
+# $ docker image ls
+# REPOSITORY      TAG       IMAGE ID       CREATED         SIZE
+# torch-cpu   latest    6eb35e1f2d6f   6 seconds ago   1.43GB

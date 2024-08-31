@@ -1,0 +1,15 @@
+gliner
+flupy
+GPUtil
+datasets
+torch
+fastapi
+uvicorn[standard]
+gunicorn
+celery[redis]
+redis[hiredis]
+flower
+loguru
+fastapi-cache2[redis]
+locust
+hf_transfer

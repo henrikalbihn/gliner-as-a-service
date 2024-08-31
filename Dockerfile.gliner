@@ -1,0 +1,27 @@
+# using the newly built torch-cpu image
+FROM torch-cpu:latest AS base-image
+
+USER root
+
+RUN mkdir -p /.cache/
+RUN chown -R 1001:1001 /.cache/
+
+RUN mkdir -p /code/models
+RUN chown -R 1001:1001 /code/models
+
+RUN apt-get update && apt-get install -y gcc
+
+COPY dependencies/requirements-clean.txt ./requirements.txt
+RUN pip install -r requirements.txt
+
+WORKDIR /code
+
+COPY ./app /code/app
+
+USER 1001
+
+# $ docker build . -f Dockerfile.gliner -t gliner-service:latest
+
+# $ docker image ls
+# REPOSITORY           TAG       IMAGE ID       CREATED          SIZE
+# gliner-service   latest    f5def190ba2c   7 seconds ago    3.42GB

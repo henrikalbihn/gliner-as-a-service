@@ -1,0 +1,73 @@
+services:
+  fastapi:
+    container_name: fastapi
+    build:
+      context: .
+      dockerfile: Dockerfile.gliner
+    command: "fastapi run app/main.py --port 8080"
+    volumes:
+      - ./app/:/app
+    ports:
+      - 8080:8080
+    links:
+      - redis
+      - celery_worker
+    env_file:
+      - .env
+
+  redis:
+    container_name: redis
+    image: redis:7.2.4-alpine
+    ports:
+      - "6379:6379"
+
+  locust:
+    container_name: locust
+    build:
+      context: .
+      dockerfile: Dockerfile.gliner
+    command: "locust -f locustfile.py"
+    ports:
+      - 8089:8089
+    volumes:
+      - .:/code
+    working_dir: /code
+    env_file:
+      - .env
+    depends_on:
+      - fastapi
+
+  celery_worker:
+    container_name: celery_worker
+    build:
+      context: .
+      dockerfile: Dockerfile.gliner
+    command: "celery -A app.src.celery_worker.gliner_app worker --loglevel=info"
+    volumes:
+      - ./app/:/app
+    env_file:
+      - .env
+    environment:
+      - HF_HOME=/app/.cache/huggingface
+    links:
+      - redis
+    depends_on:
+      - redis
+    shm_size: 2gb # to load model weights - NuNER & GLiNER large are ~1.8GB
+
+  flower:
+    container_name: flower
+    build:
+      context: .
+      dockerfile: Dockerfile.gliner
+    command: "celery -A app.src.celery_worker.gliner_app flower --port=5555"
+    ports:
+      - 5556:5555
+    volumes:
+      - ./app/:/app
+    env_file:
+      - .env
+    depends_on:
+      - fastapi
+      - redis
+      - celery_worker
