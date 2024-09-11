@@ -1,0 +1,3 @@
+streamlit==1.38.0
+st-annotated-text==4.0.1
+polars==1.6.0

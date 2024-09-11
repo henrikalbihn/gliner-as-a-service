@@ -22,6 +22,7 @@ This project leverages FastAPI, Celery, and Redis to create a scalable and effic
 - [Redis](https://redis.io/)
 - [Flower](https://flower.readthedocs.io/en/latest/)
 - [Locust](https://locust.io/)
+- [Streamlit](https://streamlit.io/)
 
 ## Getting Started
 
@@ -52,7 +53,7 @@ Open the browsers to see FastAPI's SwaggerUI, Locust, and Flower UI:
 python scripts/open_browsers.py
 ```
 
-![Screenshot](img/screenshot-swaggerui.png)
+![img](img/screenshot-swaggerui.png)
 
 Finally you can test the model:
 
@@ -60,9 +61,7 @@ Finally you can test the model:
 ./scripts/test-predict.sh
 ```
 
-<!-- Screenshot -->
-
-![Screenshot](img/screenshot-test-predict.png)
+![img](img/screenshot-test-predict.png)
 
 ```json
 [
@@ -112,6 +111,18 @@ Finally you can test the model:
   ]
 ]
 ```
+
+## User Interface
+
+The UI is built with [Streamlit](https://streamlit.io/) and can be run with the following command:
+
+```bash
+./scripts/start-ui.sh
+```
+
+![img](img/screenshot-ui.jpeg)
+
+*Note: The UI is an independent client (and thus has extra dependencies). It is not required to run the API.*
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-white.svg?
 [linkedin-url]: https://linkedin.com/in/henrikalbihn
