@@ -9,8 +9,8 @@ from fastapi.responses import JSONResponse
 from loguru import logger
 from starlette.requests import Request
 
-from app.src.models import PredictRequest, PredictResponse, Task
-from app.src.tasks import predict
+from .models import PredictRequest, PredictResponse, Task
+from .tasks import predict
 
 router = APIRouter()
 

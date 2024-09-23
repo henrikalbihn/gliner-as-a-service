@@ -7,8 +7,8 @@ from typing import Any
 from celery import Task
 from loguru import logger
 
-from app.src.celery_worker import gliner_app
-from app.src.gliner import NERModel
+from .celery_worker import gliner_app
+from .gliner import NERModel
 
 
 class PredictTask(Task):
