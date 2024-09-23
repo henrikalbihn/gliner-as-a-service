@@ -2,7 +2,7 @@
 #  https://github.com/bitnami/containers/blob/main/bitnami/pytorch/2/debian-12/Dockerfile
 FROM bitnami/pytorch:latest
 
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 ENV POETRY_HOME="/opt/poetry"
 ENV POETRY_VIRTUALENVS_CREATE=false
 ENV PATH="$POETRY_HOME/bin:$PATH"

@@ -5,10 +5,9 @@ Main module to define the FastAPI application.
 from textwrap import dedent
 
 from fastapi import FastAPI
-
-from app.src import __app_name__, __version__
-from app.src.redis import lifespan
-from app.src.router import router
+from src import __app_name__, __version__
+from src.redis import lifespan
+from src.router import router
 
 app = FastAPI(
     title=__app_name__,

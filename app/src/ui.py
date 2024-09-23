@@ -16,10 +16,10 @@ from httpx import AsyncClient
 from loguru import logger
 from PIL import Image
 
-from app.src import __app_name__ as APP_NAME
-from app.src import __author__
-from app.src import __version__ as APP_VERSION
-from app.src.models import PredictRequest
+from . import __app_name__ as APP_NAME
+from . import __author__
+from . import __version__ as APP_VERSION
+from .models import PredictRequest
 
 STATE = st.session_state
 GITHUB_URL = "https://github.com/henrikalbihn/gliner-as-a-service"
