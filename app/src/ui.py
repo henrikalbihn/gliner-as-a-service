@@ -1,7 +1,7 @@
 """
 Streamlit UI for the GLiNER package.
 
-uv pip install -r dependencies/requirements-ui.txt
+uv pip install -e ".[ui]"
 """
 
 import asyncio
@@ -15,11 +15,10 @@ from annotated_text import annotated_text
 from httpx import AsyncClient
 from loguru import logger
 from PIL import Image
-
-from . import __app_name__ as APP_NAME
-from . import __author__
-from . import __version__ as APP_VERSION
-from .models import PredictRequest
+from src import __app_name__ as APP_NAME
+from src import __author__
+from src import __version__ as APP_VERSION
+from src.models import PredictRequest
 
 STATE = st.session_state
 GITHUB_URL = "https://github.com/henrikalbihn/gliner-as-a-service"

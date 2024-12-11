@@ -3,21 +3,21 @@ services:
     container_name: fastapi
     build:
       context: .
-      dockerfile: Dockerfile.gliner
+      dockerfile: Dockerfile
     command: "fastapi run app/main.py --port 8080"
     volumes:
       - ./app/:/app
     ports:
       - 8080:8080
     links:
-      - redis
+      - valkey
       - celery_worker
     env_file:
       - .env
 
-  redis:
-    container_name: redis
-    image: redis:7.2.4-alpine
+  valkey:
+    container_name: valkey
+    image: valkey/valkey:8.0.1-alpine
     ports:
       - "6379:6379"
 
@@ -25,7 +25,7 @@ services:
     container_name: locust
     build:
       context: .
-      dockerfile: Dockerfile.gliner
+      dockerfile: Dockerfile
     command: "locust -f locustfile.py"
     ports:
       - 8089:8089
@@ -41,7 +41,7 @@ services:
     container_name: celery_worker
     build:
       context: .
-      dockerfile: Dockerfile.gliner
+      dockerfile: Dockerfile
     command: "celery -A app.src.celery_worker.gliner_app worker --loglevel=info"
     volumes:
       - ./app/:/app
@@ -50,16 +50,16 @@ services:
     environment:
       - HF_HOME=/app/.cache/huggingface
     links:
-      - redis
+      - valkey
     depends_on:
-      - redis
+      - valkey
     shm_size: 2gb # to load model weights - NuNER & GLiNER large are ~1.8GB
 
   flower:
     container_name: flower
     build:
       context: .
-      dockerfile: Dockerfile.gliner
+      dockerfile: Dockerfile
     command: "celery -A app.src.celery_worker.gliner_app flower --port=5555"
     ports:
       - 5556:5555
@@ -69,5 +69,5 @@ services:
       - .env
     depends_on:
       - fastapi
-      - redis
+      - valkey
       - celery_worker

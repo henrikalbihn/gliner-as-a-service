@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 
-WORKER_CLASS=uvicorn.workers.UvicornWorker
-N_WORKERS=${N_GUNICORN_WORKERS:-1}
-PORT=${API_PORT:-8080}
-ADDRESS="0.0.0.0:${PORT}"
+API_PORT=${API_PORT:-8000}
+API_HOST=${API_HOST:-0.0.0.0}
 
-
-start_server () {
-  # Start the server
+main () {
+  if [ ! -d ".venv" ]; then
+    uv venv .venv
+    uv sync
+  fi
+  source .venv/bin/activate
   echo "
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-  [${N_WORKERS}x ${WORKER_CLASS}] workers listening @ ${ADDRESS}...
+  FastAPI server listening @ ${API_HOST}:${API_PORT}...
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 "
-
-  gunicorn -w ${N_WORKERS} -k ${WORKER_CLASS} \
-    app.main:app \
-    --bind ${ADDRESS}
+  fastapi run app/main.py \
+    --reload \
+    --host ${API_HOST} \
+    --port ${API_PORT}
 }
 
-start_server
+main

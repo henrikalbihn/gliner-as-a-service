@@ -6,8 +6,8 @@ from textwrap import dedent
 
 from fastapi import FastAPI
 from src import __app_name__, __version__
-from src.redis import lifespan
 from src.router import router
+from src.valkey import lifespan
 
 app = FastAPI(
     title=__app_name__,

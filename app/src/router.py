@@ -30,7 +30,7 @@ async def root() -> JSONResponse:
 async def health_endpoint(request: Request) -> JSONResponse:
     """Health check endpoint."""
     logger.debug(f"Request:\n\n{request}")
-    is_redis_alive = await request.app.redis.ping()
+    is_redis_alive = await request.app.valkey.ping()
     return JSONResponse(
         status_code=200,
         content={

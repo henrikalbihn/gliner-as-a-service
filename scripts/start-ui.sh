@@ -8,8 +8,7 @@ start_server () {
   Starting Streamlit UI...
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 "
-  source .venv/bin/activate
-  uv pip install -r dependencies/requirements-ui.txt
+  uv pip install -e ".[ui]" --system
   streamlit run app/src/ui.py
 }
 

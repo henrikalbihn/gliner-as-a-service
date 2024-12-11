@@ -16,6 +16,8 @@ from loguru import logger
 from tqdm import tqdm
 from transformers import get_cosine_schedule_with_warmup
 
+from .constants import DEFAULT_MODEL
+
 try:
     # Try to enable hf_transfer if available
     # - pip install huggingface_hub[hf_transfer])
@@ -47,8 +49,6 @@ available models:
   - https://huggingface.co/collections/numind/nunerzero-zero-shot-ner-662b59803b9b438ff56e49e2
 """
 
-DEFAULT_MODEL = "urchade/gliner_smallv2.1"
-
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -77,7 +77,7 @@ class NERModel:
 
     def __init__(
         self,
-        name: str = "GLiNER-S",
+        name: str = DEFAULT_MODEL,
         local_model_path: str = None,
         overwrite: bool = False,
         train_config: dict = TRAIN_CONFIG,
@@ -241,9 +241,7 @@ class NERModel:
         pbar = tqdm(range(self.train_config.num_steps))
 
         if self.train_config.warmup_ratio < 1:
-            num_warmup_steps = int(
-                self.train_config.num_steps * self.train_config.warmup_ratio
-            )
+            num_warmup_steps = int(self.train_config.num_steps * self.train_config.warmup_ratio)
         else:
             num_warmup_steps = int(self.train_config.warmup_ratio)
 
@@ -299,9 +297,7 @@ class NERModel:
                 if not checkpoint_dir.exists():
                     checkpoint_dir.mkdir(exist_ok=True, parents=True)
 
-                self.model.save_pretrained(
-                    f"{self.train_config.save_directory}/finetuned_{step}"
-                )
+                self.model.save_pretrained(f"{self.train_config.save_directory}/finetuned_{step}")
 
                 self.model.train()
 

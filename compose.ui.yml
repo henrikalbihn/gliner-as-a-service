@@ -1,0 +1,11 @@
+services:
+  streamlit:
+    container_name: streamlit
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "/workspace/scripts/start-ui.sh"
+    volumes:
+      - ./app/:/app
+    ports:
+      - 8501:8501

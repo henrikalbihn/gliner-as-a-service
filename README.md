@@ -6,11 +6,11 @@ Scalable [GLiNER](https://github.com/urchade/GLiNER) as a Service API.
 
 ## About
 
-This project leverages FastAPI, Celery, and Redis to create a scalable and efficient system for generating and serving named entity predictions from text data. The architecture is designed to handle high volumes of requests with optimal performance and reliability.
+This project leverages FastAPI, Celery, and Valkey to create a scalable and efficient system for generating and serving named entity predictions from text data. The architecture is designed to handle high volumes of requests with optimal performance and reliability.
 
 - FastAPI is used as the high-performance web framework, providing fast and asynchronous endpoints to receive text data and return predictions.
 - Celery manages the asynchronous task execution, distributing the workload across multiple workers, ensuring that the system can handle large-scale processing demands.
-- Redis serves a dual role: as a message broker between FastAPI and Celery, and as a caching layer to store task results for quick retrieval.
+- Valkey serves a dual role: as a message broker between FastAPI and Celery, and as a caching layer to store task results for quick retrieval.
 - Flower is integrated for real-time monitoring and management of Celery tasks, giving you visibility into the system's performance and task execution status.
 - Locust is integrated for load testing the API.
 
@@ -19,22 +19,21 @@ This project leverages FastAPI, Celery, and Redis to create a scalable and effic
 - [GLiNER](https://github.com/urchade/GLiNER)
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [Celery](https://docs.celeryq.dev/en/stable/index.html#)
-- [Redis](https://redis.io/)
+- [Valkey](https://valkey.io/)
 - [Flower](https://flower.readthedocs.io/en/latest/)
 - [Locust](https://locust.io/)
 - [Streamlit](https://streamlit.io/)
 
 ## Getting Started
 
-The application is build with docker-compose to create the various microservices. These include the FastAPI application itself, the Redis database and the Celery application. To build the Dockerfile for both FastAPI and Celery, use the following command:
+The application is build with docker-compose to create the various microservices. These include the FastAPI application itself, the Valkey database and the Celery application. To build the Dockerfile for both FastAPI and Celery, use the following command:
 
 ```bash
 # Copy the .env.example file to .env
 cp .env.example .env
 
 # Build the Docker images
-docker build . -f Dockerfile.torch-cpu --pull -t torch-cpu:latest
-docker build . -f Dockerfile.gliner -t gliner-service:latest
+docker compose build
 
 # Start the containers in detached mode
 docker compose up -d
@@ -44,7 +43,10 @@ The following environment variables  needed in a ```.env``` file.
 Leave as is for local testing.
 
 ```bash
-REDIS_URL=redis://redis:6379/0
+# we need to use redis:// as the transport protocol
+# for Celery to work with Valkey
+REDIS_URL=redis://valkey:6379/0
+VALKEY_URL=valkey://valkey:6379/0
 ```
 
 Open the browsers to see FastAPI's SwaggerUI, Locust, and Flower UI:
@@ -117,7 +119,7 @@ Finally you can test the model:
 The UI is built with [Streamlit](https://streamlit.io/) and can be run with the following command:
 
 ```bash
-./scripts/start-ui.sh
+docker compose -f compose.ui.yml up
 ```
 
 ![img](img/screenshot-ui.jpeg)
@@ -126,3 +128,8 @@ The UI is built with [Streamlit](https://streamlit.io/) and can be run with the 
 
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-white.svg?
 [linkedin-url]: https://linkedin.com/in/henrikalbihn
+
+### References
+
+- <https://valkey-py.readthedocs.io/en/latest/examples/asyncio_examples.html>
+- <https://fastapi.tiangolo.com/async/>
